@@ -2,16 +2,11 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: 
-
-
-    spec:
+        spdaec:
   params:
     - name: hello-world-message
       type: string
       default: "Hello, world!"
-
-
-
   steps:
         - image: quay.io/ibmgaragecloud/alpine-curl
       name: retrieve-yaml
@@ -20,7 +15,7 @@ metadata:
         mkdir workspace/k8s
         curl https://raw.githubusercontent.com/tektoncd/pipeline/main/examples/v1/taskruns/run-steps-as-non-root.yaml > workspace/k8s/run-steps-as-non-root.yaml
         cat workspace/k8s/run-steps-as-non-root.yaml
-    - image: quay.io/ibmgaragecloud/alpine-curl
+          - image: quay.io/ibmgaragecloud/alpine-curl
       name: extract-task
       computeResources: {}
       script: |

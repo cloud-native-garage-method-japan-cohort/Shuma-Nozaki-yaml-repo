@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: 
+
+
+    spec:
+  params:
+    - name: hello-world-message
+      type: string
+      default: "Hello, world!"
+
+
+
+  steps:
+        - image: quay.io/ibmgaragecloud/alpine-curl
+      name: retrieve-yaml
+      computeResources: {}
+      script: |
+        mkdir workspace/k8s
+        curl https://raw.githubusercontent.com/tektoncd/pipeline/main/examples/v1/taskruns/run-steps-as-non-root.yaml > workspace/k8s/run-steps-as-non-root.yaml
+        cat workspace/k8s/run-steps-as-non-root.yaml
+    - image: quay.io/ibmgaragecloud/alpine-curl
+      name: extract-task
+      computeResources: {}
+      script: |
+        head -n 24 /workspace/k8s/run-steps-as-non-root.yaml > workspace/k8s/run-steps-as-non-root-task-only.yaml
+        cat workspace/k8s/run-steps-as-non-root-task-only.yaml
+    - image: quay.io/ibmgaragecloud/alpine-curl
+      name: swap-image
+      computeResources: {}
+      script: |
+        sed -e 's/image: mirror.gcr.io\/ubuntu/quay.io\/ibmgaragecloud\/alpine-curl/' workspace/k8s/run-steps-as-non-root-task-only.yaml > run-steps-as-non-root-alpine-task.yaml 
+        cat run-steps-as-non-root-alpine-task.yaml
